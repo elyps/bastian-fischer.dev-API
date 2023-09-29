@@ -1,0 +1,162 @@
+server:
+  port: 8083
+  # servlet:
+  # context-path: / # /api/v1/
+logging:
+  level:
+    web: DEBUG
+    com:
+      sup1x: DEBUG
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
+  file:
+    path: ${LOGGING_FILE_PATH}
+    name: ${LOGGING_FILE_PATH}${LOGGING_FILE_NAME}
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+spring:
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+#  security:
+#    user:
+#      name: ${SECURITY_USER_NAME}
+#      password: ${SECURITY_USER_PASSWORD}
+#      roles: ${SECURITY_USER_ROLES}
+  application:
+    name: api
+  config:
+    import: file:/Users/elyps/dev/projects/side/homepage/api/src/main/resources/dev.env[.properties]
+#    location: classpath:/Users/elyps/dev/projects/side/homepage/api/src/main/resources/dev.env
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    #url: jdbc:h2:file:./data/dbhp; # Persistence
+#    url: jdbc:h2:mem:db_homepage; # Test
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driverClassName: ${DB_DRIVER}
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    #defer-datasource-initialization: truespring.jpa.show-sql=true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        show_sql: true
+#        jdbc:
+#          lob:
+#            non_contextual_creation: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+          trace: false
+          web-allow-others: false
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+#    password: DEC(fzgqlqeaaeuignss)
+    password: ${MAIL_PASSWORD}
+    protocol: ${MAIL_PROTOCOL}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_SMTP_AUTH}
+          starttls:
+            enable: ${MAIL_SMTP_STARTTLS_ENABLE}
+            required: ${MAIL_SMTP_STARTTLS_REQUIRED}
+            ssl:
+              trust: ${MAIL_SMTP_SSL_TRUST}
+      connection-timeout: ${MAIL_CONNECTION_TIMEOUT}
+      timeout: ${MAIL_TIMEOUT}
+      write-timeout: ${MAIL_WRITE_TIMEOUT}
+  # Liquibase-Einstellungen
+  liquibase:
+    contexts: development
+    enabled: true
+#    url: jdbc:h2:mem:db_homepage;
+#    user: sa
+#    password:
+    default-schema: public
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  # Redis Configuration
+  data:
+    redis:
+      host: localhost
+      port: 6379
+# Actuator / Monitoring
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: /monitor
+      exposure:
+        include: health,info,metrics,autoconfig,beans,dump,env,loggers,mappings,trace
+info:
+  application:
+    name: ${spring.application.name}
+    description: API for bastian-fischer.dev
+    author:
+      name: Bastian Fischer
+      bio: Software Developer
+# Encryption/Decryption Configuration
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+    algorithm: ${JASYPT_ALGORITHM}
+# App Properties
+homepage:
+  client:
+    jwtRefreshExpirationMs: 86400000 #${JWT_REFRESH_EXPIRATION_MS}
+    jwtSecret: ${JWT_SECRET}
+    jwtExpirationMs: ${JWT_EXPIRATION_MS}
+    jwtCookieName: hp-jwt-token #${JWT_COOKIE_NAME}
+    jwtRefreshCookieName: hp-jwt-refresh-token #${JWT_REFRESH_COOKIE_NAME}
+  openAPI:
+    title: bastian-fischer.dev API
+    description: This API exposes endpoints to manage 'bastian-fischer.dev'.
+    version: 1.0.0
+    termsOfServiceUrl: https://www.bastian-fischer.dev/terms-of-service
+    server:
+      dev:
+        description: Development server
+        url: http://localhost:8083
+      prod:
+        description: Production server
+        url: https://www.bastian-fischer.dev
+    license:
+      name: MIT License
+      url: https://choosealicense.com/licenses/mit/
+    contact:
+      name: Bastian Fischer
+      url: https://www.bastian-fischer.dev
+      email: kontakt@bastian-fischer.dev
+    # packages-to-scan: com.sup1x.api.controller
+    api-docs:
+      enabled: true
+      path: /sup1x-api-docs
+    swagger-ui:
+      enabled: true
+      path: /sup1x-documentation
+      tryItOutEnabled: true
+      operationsSorter: method
+      tagsSorter: alpha
+      filter: true

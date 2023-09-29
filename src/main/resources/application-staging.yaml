@@ -1,0 +1,36 @@
+server:
+  port: 8084
+  servlet:
+    context-path:  / # /api/v1/
+spring:
+  datasource:
+    #url: jdbc:h2:file:./data/dbhp;
+    url: jdbc:mysql://localhost:3306/testdb?useSSL=false
+    username: root
+    password: 123456
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    #defer-datasource-initialization: truespring.jpa.show-sql=true
+    properties:
+      hibernate:
+        # Hibernate ddl auto (create, create-drop, validate, update)
+        ddl-auto: update
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        show_sql: true
+        # jdbc:
+          # lob:
+            # non_contextual_creation: true
+  h2:
+    console:
+      enabled: true
+      path: /api/x/h2
+      settings:
+          trace: false
+          web-allow-others: false
+# App Properties
+homepage:
+  client:
+    jwtSecret: ======================Homepage=Spring===========================
+    jwtExpirationMs: 86400000
