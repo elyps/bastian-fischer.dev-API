@@ -23,7 +23,7 @@ public class JasyptConfig {
     public StringEncryptor stringEncryptor() {
 
         List<String> resultArray = new ArrayList<>();
-        String filePath = "api/src/main/resources/dev.env";
+        String filePath = "src/main/resources/dev.env";
 
         String encryptionPassword = "ENC(t5CrgvlJCiWwmLIOUNRLmBcswCGee6O1)";
         StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();

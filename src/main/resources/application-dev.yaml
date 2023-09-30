@@ -31,7 +31,7 @@ spring:
   application:
     name: api
   config:
-    import: file:/Users/elyps/dev/projects/side/homepage/api/src/main/resources/dev.env[.properties]
+    import: file:src/main/resources/dev.env[.properties]
 #    location: classpath:/Users/elyps/dev/projects/side/homepage/api/src/main/resources/dev.env
   main:
     allow-bean-definition-overriding: true
