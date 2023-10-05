@@ -50,7 +50,7 @@ public class GitHubService {
      * try {
      * // GitHub-Verbindung erstellen (wie im vorherigen Beispiel gezeigt)
      * GitHub github =
-     * GitHub.connectUsingOAuth("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");
+     * GitHub.connectUsingOAuth("");
      * GHRepository repository = github.getRepository(githubUsername + "/" +
      * githubRepoName);
      * 
@@ -88,7 +88,7 @@ public class GitHubService {
     public void saveAllReposForUser() {
         try {
             // GitHub-Verbindung erstellen (wie im vorherigen Beispiel gezeigt)
-            GitHub github = GitHub.connectUsingOAuth("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");
+            GitHub github = GitHub.connectUsingOAuth("");
 
             // Repositories des Benutzers abrufen
             for (GHRepository repository : github.getUser("elyps").listRepositories()) {
