@@ -52,6 +52,22 @@ dependencies {
     //--- Monitoring
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    //--- GIT
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r'
+    // implementation 'org.ajoberstar.grgit:org.ajoberstar.grgit.gradle.plugin:5.2.0'
+    // implementation 'org.springframework.boot:spring-boot-configuration-processor:3.1.4'
+    // id 'com.gorylenko.gradle-git-properties' version '2.2.2' // Das Git-Properties-Plugin
+
+    //--- REST API, eg. Github
+    // implementation 'org.springframework.boot:spring-boot-starter-data-rest:3.1.4'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'org.kohsuke:github-api:1.316'
+
+    //--- JSON
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
     //--- SESSION
 //    implementation 'org.springframework.session:spring-session-core'
 //    implementation 'org.springframework.session:spring-session-jdbc'
@@ -96,3 +112,38 @@ tasks.named('bootBuildImage') {
             'BP_NATIVE_IMAGE_BUILD_ARGUMENTS': '-Dspring.native.remove-yaml-support=true -Dspring.native.remove-xml-support=true -Dspring.native.remove-spel-support=true -Dspring.native.remove-jmx-support=true -Dspring.native.remove-cloud-foundry-support=true -Dspring.native.remove-liquibase-support=true -Dspring.native.remove-rsocket-support=true -Dspring.native.remove-actuator=true -Dspring.native.remove-security=true -Dspring.native.remove-validation=true -Dspring.native.remove-xml=true -Dspring.native.remove-jmx=true -Dspring.native.remove-groovy=true -Dspring.native.remove-kotlin=true -Dspring.native.remove-mongodb=true -Dspring.native.remove-jdbc=true -Dspring.native.remove-jcache=true -Dspring.native.remove-jms=true'
     ]
 }
+
+/* // Konfiguriere das Git-Commit-ID-Plugin
+gitProperties {
+    // Stelle sicher, dass es bei jedem Build aktualisiert wird
+    version = '5.2.0'
+} */
+
+// gerrit {
+//     // Stelle sicher, dass es bei jedem Build aktualisiert wird
+//     version = '5.2.0'
+// }
+
+/* // adds a grgit property to the project (will silently be null if there's no git repo)
+tasks.register("describe") {
+  doFirst {
+        println grgit.describe()
+  }
+} */
+
+/* tasks.register("describe", DescribeTask, grgitService.service)
+
+class DescribeTask extends DefaultTask {
+    private final Provider<GrgitService> service
+
+    @Inject
+    DescribeTask(Provider<GrgitService> service) {
+        this.service = service
+        usesService(service)
+    }
+
+    @TaskAction
+    void execute() {
+        println service.get().grgit.describe()
+    }
+} */

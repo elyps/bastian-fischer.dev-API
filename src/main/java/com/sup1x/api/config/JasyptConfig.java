@@ -15,7 +15,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@PropertySource(value = "encrypted.properties")
+@PropertySource(value = "encrypted.properties") // load the encryption key from the properties file and use it to encrypt and decrypt data.
 @Configuration
 public class JasyptConfig {
 

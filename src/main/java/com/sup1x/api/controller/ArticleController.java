@@ -28,7 +28,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 //@CrossOrigin(origins = "http://localhost:8083")
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials="true")
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 @Tag(name = "Article V1", description = "Article V1 Management API")
 @RestController
 @RequestMapping("/api/v1/articles")
@@ -48,7 +48,8 @@ public class ArticleController {
     private CommentRepository commentRepository;
 
     @Autowired
-    public ArticleController(ArticleService articleService, NotificationService notificationService, TagRepository tagRepository) {
+    public ArticleController(ArticleService articleService, NotificationService notificationService,
+            TagRepository tagRepository) {
         this.articleService = articleService;
         this.notificationService = notificationService;
         this.tagRepository = tagRepository;
@@ -94,30 +95,34 @@ public class ArticleController {
         }
     }
 
-    /*@GetMapping("/all")
-    public ResponseEntity<List<Article>> getAllArticles(@RequestParam(required = false) String title) {
-        try {
-            List<Article> articles;
-            if (title == null) {
-                articles = articleRepository.findAll();
-            } else {
-                articles = articleRepository.findByTitleContaining(title);
-            }
-            if (articles.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(articles);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
+    /*
+     * @GetMapping("/all")
+     * public ResponseEntity<List<Article>> getAllArticles(@RequestParam(required =
+     * false) String title) {
+     * try {
+     * List<Article> articles;
+     * if (title == null) {
+     * articles = articleRepository.findAll();
+     * } else {
+     * articles = articleRepository.findByTitleContaining(title);
+     * }
+     * if (articles.isEmpty()) {
+     * return ResponseEntity.noContent().build();
+     * }
+     * return ResponseEntity.ok(articles);
+     * } catch (Exception e) {
+     * return ResponseEntity.notFound().build();
+     * }
+     * }
+     */
 
-    /*@GetMapping("/all")
-    public ResponseEntity<List<Article>> getAllArticlesWithTags() {
-        List<Article> articles = articleRepository.findAll();
-        return ResponseEntity.ok(articles);
-    }*/
-
+    /*
+     * @GetMapping("/all")
+     * public ResponseEntity<List<Article>> getAllArticlesWithTags() {
+     * List<Article> articles = articleRepository.findAll();
+     * return ResponseEntity.ok(articles);
+     * }
+     */
 
     @GetMapping("/all")
     public ResponseEntity<Map<String, Object>> getAllArticlesPage(
@@ -164,19 +169,34 @@ public class ArticleController {
         }
     }
 
-    /*@GetMapping("/{id}")
-    public ResponseEntity<Article> getArticleById(@PathVariable(value = "id") int id) {
-        try {
-            Article article = articleRepository.findById((long) id).orElseThrow(() -> new Exception("Article not found for this id :: " + id));
-            return ResponseEntity.ok(article);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
+    /*
+     * @GetMapping("/{id}")
+     * public ResponseEntity<Article> getArticleById(@PathVariable(value = "id") int
+     * id) {
+     * try {
+     * Article article = articleRepository.findById((long) id).orElseThrow(() -> new
+     * Exception("Article not found for this id :: " + id));
+     * return ResponseEntity.ok(article);
+     * } catch (Exception e) {
+     * return ResponseEntity.notFound().build();
+     * }
+     * }
+     */
 
     @GetMapping("/{id}")
     public ResponseEntity<Article> getArticleById(@PathVariable("id") long id) {
         Optional<Article> articleData = articleRepository.findById(id);
+
+        if (articleData.isPresent()) {
+            return new ResponseEntity<>(articleData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<Article> findArticleBySlug(@PathVariable("slug") String slug) {
+        Optional<Article> articleData = articleRepository.findArticleBySlug(slug);
 
         if (articleData.isPresent()) {
             return new ResponseEntity<>(articleData.get(), HttpStatus.OK);
@@ -191,7 +211,8 @@ public class ArticleController {
         // Get the authentication object from the SecurityContextHolder
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+        if (authentication != null && authentication.isAuthenticated()
+                && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
 
@@ -209,8 +230,7 @@ public class ArticleController {
                     article.getLanguages(),
                     article.getPublished(),
                     article.getCreatedAt(),
-                    article.getUpdatedAt()
-            );
+                    article.getUpdatedAt());
 
             // Set the author to the logged-in user's username
             newArticle.setAuthor(username);
@@ -251,9 +271,9 @@ public class ArticleController {
                 _article.setCategory(article.getCategory());
             }
 
-//            if (article.getTags() != null) {
-//                _article.setTags(article.getTags());
-//            }
+            // if (article.getTags() != null) {
+            // _article.setTags(article.getTags());
+            // }
 
             if (article.getImages() != null) {
                 _article.setImages(article.getImages());
@@ -302,18 +322,20 @@ public class ArticleController {
         }
     }
 
-/*    @GetMapping("/published")
-    public ResponseEntity<List<Article>> findByPublished() {
-        try {
-            List<Article> articles = articleRepository.findByPublished(true);
-            if (articles.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(articles);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
+    /*
+     * @GetMapping("/published")
+     * public ResponseEntity<List<Article>> findByPublished() {
+     * try {
+     * List<Article> articles = articleRepository.findByPublished(true);
+     * if (articles.isEmpty()) {
+     * return ResponseEntity.noContent().build();
+     * }
+     * return ResponseEntity.ok(articles);
+     * } catch (Exception e) {
+     * return ResponseEntity.notFound().build();
+     * }
+     * }
+     */
 
     @GetMapping("/published")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -340,93 +362,108 @@ public class ArticleController {
         }
     }
 
-   /* @GetMapping("/tags/all")
-    public ResponseEntity<List<com.sup1x.api.model.Tag>> getAllTags() {
-        List<com.sup1x.api.model.Tag> tags = tagRepository.findAll();
-        return ResponseEntity.ok(tags);
-    }*/
+    /*
+     * @GetMapping("/tags/all")
+     * public ResponseEntity<List<com.sup1x.api.model.Tag>> getAllTags() {
+     * List<com.sup1x.api.model.Tag> tags = tagRepository.findAll();
+     * return ResponseEntity.ok(tags);
+     * }
+     */
 
-    /*@GetMapping("/{id}/tags")
-    public ResponseEntity<List<com.sup1x.api.model.Tag>> getTagsForArticleAndTitle(
-            @RequestParam("articleId") int articleId,
-            @RequestParam("title") String title) {
+    /*
+     * @GetMapping("/{id}/tags")
+     * public ResponseEntity<List<com.sup1x.api.model.Tag>>
+     * getTagsForArticleAndTitle(
+     * 
+     * @RequestParam("articleId") int articleId,
+     * 
+     * @RequestParam("title") String title) {
+     * 
+     * // Fügen Sie hier den Code hinzu, um Tags für den angegebenen Artikel und
+     * Titel abzurufen
+     * List<com.sup1x.api.model.Tag> tags = articleService.getTagsIn(articleId,
+     * title);
+     * 
+     * if (tags.isEmpty()) {
+     * return ResponseEntity.noContent().build();
+     * }
+     * 
+     * return ResponseEntity.ok(tags);
+     * }
+     */
 
-        // Fügen Sie hier den Code hinzu, um Tags für den angegebenen Artikel und Titel abzurufen
-        List<com.sup1x.api.model.Tag> tags = articleService.getTagsIn(articleId, title);
+    /*
+     * @GetMapping("/tags")
+     * public ResponseEntity<List<String>> getAllTags() {
+     * List<String> tags = tagRepository.findAllTags();
+     * return ResponseEntity.ok(tags);
+     * }
+     */
 
-        if (tags.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
+    /*
+     * @GetMapping("/tags")
+     * public ResponseEntity<List<Tag>> getAllTags() {
+     * List<Tag> tags = (List<Tag>) tagRepository.findAll();
+     * return ResponseEntity.ok(tags);
+     * }
+     */
 
-        return ResponseEntity.ok(tags);
-    }*/
+    /*
+     * @GetMapping("/tags")
+     * public ResponseEntity<List<String>> findTagsByTags(@RequestParam(required =
+     * false) List<String> tags) {
+     * try {
+     * List<String> uniqueTags = new ArrayList<>();
+     * 
+     * if (tags == null || tags.isEmpty()) {
+     * // Wenn keine Tags angegeben sind, alle eindeutigen Tags aus der Datenbank
+     * abrufen.
+     * List<Article> articles = articleRepository.findAll();
+     * for (Article article : articles) {
+     * uniqueTags.addAll(article.getTags());
+     * }
+     * } else {
+     * // Andernfalls Tags aus Artikeln mit den angegebenen Tags abrufen.
+     * List<Article> articles = articleRepository.findByTagsIn(tags);
+     * for (Article article : articles) {
+     * uniqueTags.addAll(article.getTags());
+     * }
+     * }
+     * 
+     * // Die Liste der eindeutigen Tags erstellen (doppelte Tags entfernen).
+     * List<String> distinctTags = uniqueTags.stream()
+     * .distinct()
+     * .collect(Collectors.toList());
+     * 
+     * if (distinctTags.isEmpty()) {
+     * return ResponseEntity.noContent().build();
+     * }
+     * 
+     * return ResponseEntity.ok(distinctTags);
+     * } catch (Exception e) {
+     * return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+     * }
+     * }
+     */
 
-
-    /*@GetMapping("/tags")
-    public ResponseEntity<List<String>> getAllTags() {
-        List<String> tags = tagRepository.findAllTags();
-        return ResponseEntity.ok(tags);
-    }*/
-
-    /*@GetMapping("/tags")
-    public ResponseEntity<List<Tag>> getAllTags() {
-        List<Tag> tags = (List<Tag>) tagRepository.findAll();
-        return ResponseEntity.ok(tags);
-    }*/
-
-    /*@GetMapping("/tags")
-    public ResponseEntity<List<String>> findTagsByTags(@RequestParam(required = false) List<String> tags) {
-        try {
-            List<String> uniqueTags = new ArrayList<>();
-
-            if (tags == null || tags.isEmpty()) {
-                // Wenn keine Tags angegeben sind, alle eindeutigen Tags aus der Datenbank abrufen.
-                List<Article> articles = articleRepository.findAll();
-                for (Article article : articles) {
-                    uniqueTags.addAll(article.getTags());
-                }
-            } else {
-                // Andernfalls Tags aus Artikeln mit den angegebenen Tags abrufen.
-                List<Article> articles = articleRepository.findByTagsIn(tags);
-                for (Article article : articles) {
-                    uniqueTags.addAll(article.getTags());
-                }
-            }
-
-            // Die Liste der eindeutigen Tags erstellen (doppelte Tags entfernen).
-            List<String> distinctTags = uniqueTags.stream()
-                    .distinct()
-                    .collect(Collectors.toList());
-
-            if (distinctTags.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-
-            return ResponseEntity.ok(distinctTags);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }*/
-
-
-
-//    @GetMapping("/tags")
-//    public ResponseEntity<List<Article>> findByTags(@RequestParam(required = false) List<String> tags) {
-//        try {
-//            List<Article> articles;
-//            if (tags == null || tags.isEmpty()) {
-//                articles = articleRepository.findAll();
-//            } else {
-//                articles = articleRepository.findByTagsIn(tags);
-//            }
-//            if (articles.isEmpty()) {
-//                return ResponseEntity.noContent().build();
-//            }
-//            return ResponseEntity.ok(articles);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
+    // @GetMapping("/tags")
+    // public ResponseEntity<List<Article>> findByTags(@RequestParam(required =
+    // false) List<String> tags) {
+    // try {
+    // List<Article> articles;
+    // if (tags == null || tags.isEmpty()) {
+    // articles = articleRepository.findAll();
+    // } else {
+    // articles = articleRepository.findByTagsIn(tags);
+    // }
+    // if (articles.isEmpty()) {
+    // return ResponseEntity.noContent().build();
+    // }
+    // return ResponseEntity.ok(articles);
+    // } catch (Exception e) {
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    // }
+    // }
 
     @GetMapping("/languages")
     public ResponseEntity<List<Article>> findByLanguages(@RequestParam(required = false) List<String> languages) {
@@ -438,7 +475,8 @@ public class ArticleController {
                 // If no language filter is given, retrieve all articles
                 articles = articleRepository.findAll();
             } else {
-                // If the "language" parameter is provided, fetch articles containing the specified language(s)
+                // If the "language" parameter is provided, fetch articles containing the
+                // specified language(s)
                 articles = articleRepository.findByLanguagesIn(languages);
             }
 
@@ -447,10 +485,12 @@ public class ArticleController {
                 return ResponseEntity.noContent().build();
             }
 
-            // If articles are found, return a response with status code 200 (OK) and the list of articles
+            // If articles are found, return a response with status code 200 (OK) and the
+            // list of articles
             return ResponseEntity.ok(articles);
         } catch (Exception e) {
-            // If any exception occurs during processing, return a response with status code 404 (Not Found)
+            // If any exception occurs during processing, return a response with status code
+            // 404 (Not Found)
             return ResponseEntity.notFound().build();
         }
     }
@@ -601,11 +641,14 @@ public class ArticleController {
     public Comment createComment(@PathVariable Long id, @RequestBody Comment comment) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+        if (authentication != null && authentication.isAuthenticated()
+                && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
-            String createdAt = LocalDate.now() + " " + new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds();
-            String updatedAt = LocalDate.now() + " " + new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds();
+            String createdAt = LocalDate.now() + " " + new Date().getHours() + ":" + new Date().getMinutes() + ":"
+                    + new Date().getSeconds();
+            String updatedAt = LocalDate.now() + " " + new Date().getHours() + ":" + new Date().getMinutes() + ":"
+                    + new Date().getSeconds();
 
             return articleRepository.findById(id).map(article -> {
                 comment.setArticle(article);
@@ -620,13 +663,19 @@ public class ArticleController {
             return null;
         }
 
-        /*Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Article not found with id " + id));
-        comment.setArticle(article);
-        comment.setCommentAuthor(username); // Füge den Benutzernamen zum Kommentar hinzu
-        comment.setCreatedAt(createdAt); // Füge das aktuelle Datum zum Kommentar hinzu
-        comment.setUpdatedAt(updatedAt); // Füge das aktuelle Datum zum Kommentar hinzu
-        return commentRepository.save(comment);*/
+        /*
+         * Article article = articleRepository.findById(id)
+         * .orElseThrow(() -> new ResourceNotFoundException("Article not found with id "
+         * + id));
+         * comment.setArticle(article);
+         * comment.setCommentAuthor(username); // Füge den Benutzernamen zum Kommentar
+         * hinzu
+         * comment.setCreatedAt(createdAt); // Füge das aktuelle Datum zum Kommentar
+         * hinzu
+         * comment.setUpdatedAt(updatedAt); // Füge das aktuelle Datum zum Kommentar
+         * hinzu
+         * return commentRepository.save(comment);
+         */
     }
 
     // Endpunkt zum Abrufen aller Kommentare für einen Beitrag

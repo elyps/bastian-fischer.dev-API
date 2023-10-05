@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@EnableCaching
+// @EnableCaching
 public class ArticleService {
 
     @Autowired
@@ -42,43 +42,43 @@ public class ArticleService {
     }*/
 
 
-    @Cacheable("articles")
-    public List<Article> findAll() {
-        doLongRunningTask();
+    // @Cacheable("articles")
+    // public List<Article> findAll() {
+    //     doLongRunningTask();
 
-        return articleRepository.findAll();
-    }
+    //     return articleRepository.findAll();
+    // }
 
-    @Cacheable("title")
-    public List<Article> findByTitleContaining(String title) {
-        doLongRunningTask();
+    // @Cacheable("title")
+    // public List<Article> findByTitleContaining(String title) {
+    //     doLongRunningTask();
 
-        return articleRepository.findByTitleContaining(title, Sort.by(Sort.Direction.DESC, "id"));
-    }
+    //     return articleRepository.findByTitleContaining(title, Sort.by(Sort.Direction.DESC, "id"));
+    // }
 
-    @Cacheable("{id}")
-    public Optional<Article> findById(long id) {
-        doLongRunningTask();
+    // @Cacheable("{id}")
+    // public Optional<Article> findById(long id) {
+    //     doLongRunningTask();
 
-        return articleRepository.findById(id);
-    }
+    //     return articleRepository.findById(id);
+    // }
 
-    @Cacheable("published")
-    public List<Article> findByPublished(boolean isPublished) {
-        doLongRunningTask();
+    // @Cacheable("published")
+    // public List<Article> findByPublished(boolean published) {
+    //     doLongRunningTask();
 
-        return articleRepository.findByPublished(isPublished);
-    }
+    //     return articleRepository.findByPublished(published);
+    // }
 
-    // other methods...
+    // // other methods...
 
-    private void doLongRunningTask() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+    // private void doLongRunningTask() {
+    //     try {
+    //         Thread.sleep(3000);
+    //     } catch (InterruptedException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     // Methode zum Hinzufügen eines "Likes" zu einem Artikel
     public void likeArticle(Long articleId) {

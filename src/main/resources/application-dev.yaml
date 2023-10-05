@@ -36,12 +36,14 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    #url: jdbc:h2:file:./data/dbhp; # Persistence
-#    url: jdbc:h2:mem:db_homepage; # Test
-    url: ${DB_URL}
+    # url: jdbc:h2:file:./data/dbhp; # Persistence
+    url: jdbc:h2:mem:db_homepage; # Test
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driverClassName: ${DB_DRIVER}
+    platform: h2
+    # driver-class-name: org.h2.Driver
+    initialize: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     #defer-datasource-initialization: truespring.jpa.show-sql=true
@@ -160,3 +162,8 @@ homepage:
       operationsSorter: method
       tagsSorter: alpha
       filter: true
+github:
+  api:
+    url: https://api.github.com
+  html:
+    url: https://github.com
