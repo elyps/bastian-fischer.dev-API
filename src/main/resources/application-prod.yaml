@@ -2,6 +2,14 @@ server:
   port: 8083
   # servlet:
   # context-path: / # /api/v1/
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+    include-message: always
+    include-binding-errors: always
+    include-exception: true
+    include-stacktrace: always
 logging:
   level:
     web: DEBUG
@@ -13,82 +21,87 @@ logging:
           filter:
             CommonsRequestLoggingFilter: DEBUG
   file:
-    path: ${LOGGING_FILE_PATH}
-    name: ${LOGGING_FILE_PATH}${LOGGING_FILE_NAME}
+    # path: api/src/main/resources/logs/
+    # name: api/src/main/resources/logs/api.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
 spring:
   servlet:
     multipart:
       max-file-size: 2MB
       max-request-size: 2MB
-  #  security:
-  #    user:
-  #      name: ${SECURITY_USER_NAME}
-  #      password: ${SECURITY_USER_PASSWORD}
-  #      roles: ${SECURITY_USER_ROLES}
+#  security:
+#    user:
+#      name: ${SECURITY_USER_NAME}
+#      password: ${SECURITY_USER_PASSWORD}
+#      roles: ${SECURITY_USER_ROLES}
   application:
     name: api
   config:
-    import: file:api/src/main/resources/prod.env[.properties]
+    # import: file:src/main/resources/ # Development
+    # import: optional:file:src/main/resources/dev.env
+   location: classpath:/Users/elyps/dev/projects/side/homepage/api/src/main/resources/dev.env # Production
   main:
     allow-bean-definition-overriding: true
   datasource:
-    url: ${DB_URL}
+    url: jdbc:h2:file:./data/dbhp; # Persistence
+    # url: jdbc:h2:mem:db_homepage; # In-Memory
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-#    driverClassName: ${DB_DRIVER}
+    driverClassName: org.h2.Driver
+    platform: h2
+    # driver-class-name: org.h2.Driver
+    initialize: true
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-#    defer-datasource-initialization:
-#      true-spring:
-#        jpa:
-#          show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    #defer-datasource-initialization: truespring.jpa.show-sql=true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
         show_sql: true
-        jdbc:
-          lob:
-            non_contextual_creation: true
+#        jdbc:
+#          lob:
+#            non_contextual_creation: true
     hibernate:
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2
-#      settings:
-#        trace: false
-#        web-allow-others: false
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+          trace: false
+          web-allow-others: false
   mail:
-    host: ${MAIL_HOST}
-    port: ${MAIL_PORT}
-    username: ${MAIL_USERNAME}
-    #    password: DEC(fzgqlqeaaeuignss)
-    password: ${MAIL_PASSWORD}
-    protocol: ${MAIL_PROTOCOL}
+    host: smtp.gmail.com
+    port: 587
+    username: kontakt@bastian-fischer.dev
+    password: 
+    protocol: ssl
     default-encoding: UTF-8
     properties:
       mail:
         smtp:
-          auth: ${MAIL_SMTP_AUTH}
+          auth: true
           starttls:
-            enable: ${MAIL_SMTP_STARTTLS_ENABLE}
-            required: ${MAIL_SMTP_STARTTLS_REQUIRED}
+            enable: true
+            required: true
             ssl:
               trust: ${MAIL_SMTP_SSL_TRUST}
-      connection-timeout: ${MAIL_CONNECTION_TIMEOUT}
-      timeout: ${MAIL_TIMEOUT}
-      write-timeout: ${MAIL_WRITE_TIMEOUT}
+      connection-timeout: 5000
+      timeout: 5000
+      write-timeout: 5000
   # Liquibase-Einstellungen
   liquibase:
-    contexts: production
+    contexts: development
     enabled: true
-    #    url: jdbc:h2:mem:db_homepage;
-    #    user: sa
-    #    password:
+#    url: jdbc:h2:mem:db_homepage;
+#    user: sa
+#    password:
     default-schema: public
     change-log: classpath:db/changelog/db.changelog-master.yaml
   # Redis Configuration
@@ -122,9 +135,11 @@ jasypt:
 # App Properties
 homepage:
   client:
-    jwtSecret: ${JWT_SECRET}
-    jwtExpirationMs: ${JWT_EXPIRATION_MS}
-    jwtCookieName: ${JWT_COOKIE_NAME}
+    jwtRefreshExpirationMs: 86400000 #${JWT_REFRESH_EXPIRATION_MS}
+    jwtSecret: ======================Homepage=Sup1x===========================
+    jwtExpirationMs: 86400000
+    jwtCookieName: hp-jwt-token #${JWT_COOKIE_NAME}
+    jwtRefreshCookieName: hp-jwt-refresh-token #${JWT_REFRESH_COOKIE_NAME}
   openAPI:
     title: bastian-fischer.dev API
     description: This API exposes endpoints to manage 'bastian-fischer.dev'.
@@ -155,3 +170,8 @@ homepage:
       operationsSorter: method
       tagsSorter: alpha
       filter: true
+github:
+  api:
+    url: https://api.github.com
+  html:
+    url: https://github.com

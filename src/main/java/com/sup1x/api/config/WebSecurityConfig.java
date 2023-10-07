@@ -119,6 +119,9 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/git/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/github/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/projects/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/database/**")).permitAll()
+
+                                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
 
                                 .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/h2/**")).permitAll()

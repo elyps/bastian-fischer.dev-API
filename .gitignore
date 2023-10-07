@@ -73,3 +73,58 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Secure files
+*.key
+*.pem
+
+# Angular
+/dist
+/node_modules
+npm-debug.log
+yarn-error.log
+yarn.lock
+package-lock.json
+ng-yahoo-weather-app.iml
+
+# Environment
+*.env
+*.env.prod
+*.env.prod.local
+*.env.staging
+*.env.staging.local
+*.env.local
+*.env.development
+*.env.development.local
+*.env.test
+*.env.test.local
+
+/src/environments/environment.ts
+/src/environments/environment.prod.ts
+/src/environments/environment.staging.ts
+/src/environments/environment.test.ts
+/src/environments/environment.dev.ts
+
+!/src/main/resources/*.properties
+!/src/main/resources/application.properties
+/src/main/resources/application-staging.properties
+/src/main/resources/application-test.properties
+/src/main/resources/application-dev.properties
+/src/main/resources/application-prod.properties
+
+!/src/main/resources/*.yaml
+!/src/main/resources/application.yaml
+/src/main/resources/application.yaml
+/src/main/resources/application-staging.yaml
+/src/main/resources/application-test.yaml
+/src/main/resources/application-dev.yaml
+/src/main/resources/application-prod.yaml
+
+# Static Folder
+/src/main/resources/static
+
+# Backup Folder
+/backup
+
+# Database
+/data

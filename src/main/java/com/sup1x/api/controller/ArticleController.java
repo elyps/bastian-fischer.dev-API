@@ -28,7 +28,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 //@CrossOrigin(origins = "http://localhost:8083")
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:8083", maxAge = 3600, allowCredentials = "true")
 @Tag(name = "Article V1", description = "Article V1 Management API")
 @RestController
 @RequestMapping("/api/v1/articles")

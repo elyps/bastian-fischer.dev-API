@@ -2,6 +2,14 @@ server:
   port: 8083
   # servlet:
   # context-path: / # /api/v1/
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+    include-message: always
+    include-binding-errors: always
+    include-exception: true
+    include-stacktrace: always
 logging:
   level:
     web: DEBUG
@@ -13,8 +21,8 @@ logging:
           filter:
             CommonsRequestLoggingFilter: DEBUG
   file:
-    path: ${LOGGING_FILE_PATH}
-    name: ${LOGGING_FILE_PATH}${LOGGING_FILE_NAME}
+    # path: api/src/main/resources/logs/
+    # name: api/src/main/resources/logs/api.log
   logback:
     rollingpolicy:
       max-file-size: 10MB
@@ -31,16 +39,17 @@ spring:
   application:
     name: api
   config:
-    import: file:src/main/resources/dev.env[.properties]
-#    location: classpath:/Users/elyps/dev/projects/side/homepage/api/src/main/resources/dev.env
+    import: file:src/main/resources/ # Development
+    # import: optional:file:src/main/resources/dev.env
+  #  location: classpath:/Users/elyps/dev/projects/side/homepage/api/src/main/resources/dev.env # Production
   main:
     allow-bean-definition-overriding: true
   datasource:
     # url: jdbc:h2:file:./data/dbhp; # Persistence
-    url: jdbc:h2:mem:db_homepage; # Test
+    url: jdbc:h2:mem:db_homepage; # In-Memory
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    driverClassName: ${DB_DRIVER}
+    driverClassName: org.h2.Driver
     platform: h2
     # driver-class-name: org.h2.Driver
     initialize: true
@@ -68,25 +77,24 @@ spring:
           trace: false
           web-allow-others: false
   mail:
-    host: ${MAIL_HOST}
-    port: ${MAIL_PORT}
-    username: ${MAIL_USERNAME}
-#    password: DEC(fzgqlqeaaeuignss)
-    password: ${MAIL_PASSWORD}
-    protocol: ${MAIL_PROTOCOL}
+    host: smtp.gmail.com
+    port: 587
+    username: kontakt@bastian-fischer.dev
+    password:
+    protocol: ssl
     default-encoding: UTF-8
     properties:
       mail:
         smtp:
-          auth: ${MAIL_SMTP_AUTH}
+          auth: true
           starttls:
-            enable: ${MAIL_SMTP_STARTTLS_ENABLE}
-            required: ${MAIL_SMTP_STARTTLS_REQUIRED}
+            enable: true
+            required: true
             ssl:
               trust: ${MAIL_SMTP_SSL_TRUST}
-      connection-timeout: ${MAIL_CONNECTION_TIMEOUT}
-      timeout: ${MAIL_TIMEOUT}
-      write-timeout: ${MAIL_WRITE_TIMEOUT}
+      connection-timeout: 5000
+      timeout: 5000
+      write-timeout: 5000
   # Liquibase-Einstellungen
   liquibase:
     contexts: development
@@ -128,8 +136,8 @@ jasypt:
 homepage:
   client:
     jwtRefreshExpirationMs: 86400000 #${JWT_REFRESH_EXPIRATION_MS}
-    jwtSecret: ${JWT_SECRET}
-    jwtExpirationMs: ${JWT_EXPIRATION_MS}
+    jwtSecret: ======================Homepage=Sup1x===========================
+    jwtExpirationMs: 86400000
     jwtCookieName: hp-jwt-token #${JWT_COOKIE_NAME}
     jwtRefreshCookieName: hp-jwt-refresh-token #${JWT_REFRESH_COOKIE_NAME}
   openAPI:
